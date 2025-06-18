@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch Ads & Earn</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header><h1>🎥 Watch Ads & Earn Money</h1></header>
+  <main>
+    <section class="balance">
+      <p>Current Balance: <span id="balance">$0.00</span></p>
+      <button onclick="watchAd()">Watch Ad</button>
+    </section>
+
+    <section class="tasks">
+      <h2>🎯 Task Complete</h2>
+      <button onclick="completeTask()">Complete Task & Earn $3.00</button>
+    </section>
+
+    <section class="withdraw">
+      <h2>💸 Withdraw</h2>
+      <button onclick="window.location.href='withdraw.html'">Go to Withdraw Page</button>
+    </section>
+
+    <section class="referral">
+      <h2>📢 Referral Program</h2>
+      <button onclick="window.location.href='referral.html'">Join Now</button>
+    </section>
+
+    <section class="chatbot">
+      <h2>🤖 Ask a Question</h2>
+      <button onclick="window.location.href='chat.html'">Open ChatBot</button>
+    </section>
+  </main>
+  <footer><p>© 2025 WatchAds Inc.</p></footer>
+  <script src="script.js"></script>
+</body>
+</html>
