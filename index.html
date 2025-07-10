@@ -1,40 +1,1098 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Watch Ads & Earn</title>
-  <link rel="stylesheet" href="style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad watch Rewards</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter (for body) and Montserrat (for headings) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Keyframes for Animations */
+        @keyframes fade-in-out-right {
+          0% { opacity: 0; transform: translateX(100%); }
+          10% { opacity: 1; transform: translateX(0); }
+          90% { opacity: 1; transform: translateX(0); }
+          100% { opacity: 0; transform: translateX(100%); }
+        }
+
+        @keyframes fade-in-out-left {
+          0% { opacity: 0; transform: translateX(-100%); }
+          10% { opacity: 1; transform: translateX(0); }
+          90% { opacity: 1; transform: translateX(0); }
+          100% { opacity: 0; transform: translateX(-100%); }
+        }
+
+        @keyframes bg-pulse {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+        }
+
+        .animate-fade-in-out-right {
+          animation: fade-in-out-right 5s ease-in-out forwards;
+        }
+
+        .animate-fade-in-out-left {
+          animation: fade-in-out-left 6s ease-in-out forwards;
+        }
+
+        .animate-bg-pulse {
+          background: linear-gradient(-45deg, #1f2937, #374151, #111827, #4b5563);
+          background-size: 400% 400%;
+          animation: bg-pulse 15s ease infinite;
+        }
+
+        /* Ensure full height and proper font application */
+        body {
+            font-family: 'Inter', sans-serif; /* Default body font */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        #app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 2.5rem; /* py-10 */
+            padding-bottom: 2.5rem; /* py-10 */
+            position: relative;
+            overflow: hidden;
+        }
+        /* Custom font for headings */
+        .font-heading {
+            font-family: 'Montserrat', sans-serif;
+            letter-spacing: 0.05em; /* Slightly increased letter spacing */
+            text-shadow: 0 0 5px rgba(0,255,255,0.3), 0 0 10px rgba(0,255,255,0.2); /* Subtle glow */
+        }
+        .prose { /* Basic prose styling for privacy page */
+            max-width: 80ch;
+        }
+        .prose h3 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-top: 1.5rem; /* mt-6 */
+            margin-bottom: 0.75rem; /* mb-3 */
+        }
+        .prose p {
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <header><h1>🎥 Watch Ads & Earn Money</h1></header>
-  <main>
-    <section class="balance">
-      <p>Current Balance: <span id="balance">$0.00</span></p>
-      <button onclick="watchAd()">Watch Ad</button>
-    </section>
+    <div id="app-container" class="bg-gradient-to-br from-gray-950 to-gray-800">
+        <!-- Animated Background Overlay -->
+        <div class="absolute inset-0 z-0 opacity-20 animate-bg-pulse"></div>
 
-    <section class="tasks">
-      <h2>🎯 Task Complete</h2>
-      <button onclick="completeTask()">Complete Task & Earn $3.00</button>
-    </section>
+        <!-- Header / Navigation -->
+        <header class="w-full max-w-4xl bg-gray-900 p-6 rounded-xl shadow-2xl mb-8 flex flex-col sm:flex-row justify-between items-center border border-gray-700 z-10">
+            <h1 class="text-4xl font-extrabold text-blue-400 mb-4 sm:mb-0 font-heading">Ad watch Rewards</h1>
+            <nav>
+                <ul class="flex flex-wrap justify-center gap-4">
+                    <li>
+                        <button id="nav-dashboard" class="py-2 px-4 rounded-lg font-semibold transition duration-300 text-gray-300 hover:bg-gray-700 hover:text-white font-heading">
+                            Dashboard
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-watch-ads" class="py-2 px-4 rounded-lg font-semibold transition duration-300 text-gray-300 hover:bg-gray-700 hover:text-white font-heading">
+                            Watch Ads
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-spin-roll" class="py-2 px-4 rounded-lg font-semibold transition duration-300 text-gray-300 hover:bg-gray-700 hover:text-white font-heading">
+                            Spin & Win
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-tasks" class="py-2 px-4 rounded-lg font-semibold transition duration-300 text-gray-300 hover:bg-gray-700 hover:text-white font-heading">
+                            Tasks
+                        </button>
+                    </li>
+                    <li>
+                        <button id="nav-withdrawal" class="py-2 px-4 rounded-lg font-semibold transition duration-300 text-gray-300 hover:bg-gray-700 hover:text-white font-heading">
+                            Withdrawal
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </header>
 
-    <section class="withdraw">
-      <h2>💸 Withdraw</h2>
-      <button onclick="window.location.href='withdraw.html'">Go to Withdraw Page</button>
-    </section>
+        <!-- Main Content Area -->
+        <main id="main-content" class="w-full max-w-4xl px-4 z-10">
+            <!-- Page content will be rendered here by JavaScript -->
+        </main>
 
-    <section class="referral">
-      <h2>📢 Referral Program</h2>
-      <button onclick="window.location.href='referral.html'">Join Now</button>
-    </section>
+        <!-- Ad Completion Popup -->
+        <div id="ad-completion-popup" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-gray-900 p-8 rounded-xl shadow-2xl text-center max-w-md w-full border border-blue-600 text-gray-100">
+                <h3 class="text-3xl font-bold text-blue-400 mb-4 font-heading">Congratulations!</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    You have watched all 30 ads for this session.
+                    <br />Please wait <span class="font-semibold text-red-500"><span id="cooldown-hours">0</span>h <span id="cooldown-minutes">0</span>m <span id="cooldown-seconds">0</span>s</span> before watching more ads.
+                </p>
+                <button id="close-ad-completion-popup" class="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-105 transition duration-300 border border-blue-500 font-heading">
+                    Got It!
+                </button>
+            </div>
+        </div>
 
-    <section class="chatbot">
-      <h2>🤖 Ask a Question</h2>
-      <button onclick="window.location.href='chat.html'">Open ChatBot</button>
-    </section>
-  </main>
-  <footer><p>© 2025 WatchAds Inc.</p></footer>
-  <script src="script.js"></script>
+        <!-- Task Completion Popup -->
+        <div id="task-completion-popup" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-gray-900 p-8 rounded-xl shadow-2xl text-center max-w-md w-full border border-yellow-600 text-gray-100">
+                <h3 class="text-3xl font-bold text-yellow-400 mb-4 font-heading">All Tasks Completed!</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    You have completed all available tasks for this session.
+                    <br />Please wait <span class="font-semibold text-red-500"><span id="task-cooldown-popup-hours">0</span>h <span id="task-cooldown-popup-minutes">0</span>m <span id="task-cooldown-popup-seconds">0</span>s</span> before new tasks are available.
+                </p>
+                <button id="close-task-completion-popup" class="mt-8 bg-gradient-to-r from-yellow-600 to-yellow-700 hover:from-yellow-700 hover:to-yellow-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-105 transition duration-300 border border-yellow-500 font-heading">
+                    Got It!
+                </button>
+            </div>
+        </div>
+
+        <!-- Withdrawal Confirmation Popup -->
+        <div id="withdrawal-confirmation-popup" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
+            <div class="bg-gray-900 p-8 rounded-xl shadow-2xl text-center max-w-md w-full border border-green-600 text-gray-100">
+                <h3 class="text-3xl font-bold text-green-400 mb-4 font-heading">Withdrawal Submitted!</h3>
+                <p class="text-gray-300 text-lg mb-6">
+                    Your request to withdraw <span class="font-semibold text-green-500" id="withdrawal-amount-display"></span> via <span class="font-semibold text-green-500" id="withdrawal-method-display"></span> has been successfully submitted.
+                    <br/>It will be automatically sent to your wallet/account.
+                </p>
+                <p class="text-gray-400 text-md">
+                    We will process your request shortly.
+                </p>
+                <button id="close-withdrawal-popup" class="mt-8 bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-3 px-6 rounded-lg shadow-md transform hover:scale-105 transition duration-300 border border-green-500 font-heading">
+                    Okay
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Activity Notification (bottom right) -->
+        <div id="live-notification-right" class="hidden fixed bottom-4 right-4 bg-blue-700 text-white p-4 rounded-lg shadow-xl z-50 max-w-xs border border-blue-500">
+            <p class="font-semibold text-sm" id="live-notification-right-message"></p>
+        </div>
+
+        <!-- Live Withdrawal Notification (top left) -->
+        <div id="live-notification-left" class="hidden fixed top-4 left-4 bg-purple-700 text-white p-4 rounded-lg shadow-xl z-50 max-w-xs border border-purple-500">
+            <p class="font-semibold text-sm" id="live-notification-left-message"></p>
+        </div>
+    </div>
+
+    <script>
+        // Global state variables
+        let balance = 0;
+        let adsWatched = 0;
+        let cooldownEndTime = 0; // For ad watching
+        let spinCooldownEndTime = 0; // For spin wheel
+        let tasksCompleted = 0; // New: Tasks completed in current session
+        let taskCooldownEndTime = 0; // New: Cooldown for tasks
+        let currentPage = 'dashboard';
+        let selectedCurrency = 'USD';
+        let withdrawalDetails = null;
+
+        // Ad links
+        const adLinks = [
+            "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
+            "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
+            "https://www.profitableratecpm.com/xp8srwyr?key=980aeacfeee7fed071afcf7c6dd452fa",
+            "https://www.profitableratecpm.com/zwt2kf6q?key=e089b2fc17db3a7d71405420a0b72a2d",
+            "https://www.profitableratecpm.com/picq35z4?key=dfe34626298b8704347c7852027646c8",
+            "https://www.profitableratecpm.com/uudm9x92?key=4ac673dbc7b0c0fcabab7eec886b0d48",
+            "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
+            // Repeat ads to reach 30 for demonstration purposes
+            "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
+            "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
+            "https://www.profitableratecpm.com/xp8srwyr?key=980aeacfeee7fed071afcf7c6dd452fa",
+            "https://www.profitableratecpm.com/zwt2kf6q?key=e089b2fc17db3a7d71405420a0b72a2d",
+            "https://www.profitableratecpm.com/picq35z4?key=dfe34626298b8704347c7852027646c8",
+            "https://www.profitableratecpm.com/uudm9x92?key=4ac673dbc7b0c0fcabab7eec886b0d48",
+            "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
+            "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
+            "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
+            "https://www.profitableratecpm.com/xp8srwyr?key=980aeacfeee7fed071afcf7c6dd452fa",
+            "https://www.profitableratecpm.com/zwt2kf6q?key=e089b2fc17db3a7d71405420a0b72a2d",
+            "https://www.profitableratecpm.com/picq35z4?key=dfe34626298b8704347c7852027646c8",
+            "https://www.profitableratecpm.com/uudm9x92?key=4ac673dbc7b0c0fcabab7eec886b0d48",
+            "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
+            "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
+            "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
+            "https://www.profitableratecpm.com/xp8srwyr?key=980aeacfeee7fed071afcf7c6dd452fa",
+            "https://www.profitableratecpm.com/zwt2kf6q?key=e089b2fc17db3a7d71405420a0b72a2d",
+            "https://www.profitableratecpm.com/picq35z4?key=dfe34626298b8704347c7852027646c8",
+            "https://www.profitableratecpm.com/uudm9x92?key=4ac673dbc7b0c0fcabab7eec886b0d48",
+            "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
+        ];
+
+        // Task definitions
+        const tasks = [
+            { id: 1, title: "Complete a quick survey", description: "Share your opinion on a short market research survey." },
+            { id: 2, title: "Watch a product demo", description: "View a brief demonstration of a new software product." },
+            { id: 3, title: "Install a mobile app", description: "Download and open a specified mobile application." },
+            { id: 4, title: "Sign up for a newsletter", description: "Subscribe to a partner's email newsletter." },
+            { id: 5, title: "Visit a partner website", description: "Browse a specific website for at least 30 seconds." },
+            { id: 6, title: "Follow us on social media", description: "Follow our official page on a popular social platform." },
+            { id: 7, title: "Write a short review", description: "Provide a brief review for a given product or service." },
+            { id: 8, title: "Play a mini-game", description: "Achieve a certain score in a simple browser game." },
+            { id: 9, title: "Refer a friend (simulated)", description: "Simulate referring a friend to our platform." },
+            { id: 10, title: "Complete a captcha challenge", description: "Prove you're not a robot by solving a captcha." }
+        ];
+
+        // Hardcoded exchange rates for demonstration (In a real app, use a crypto API)
+        const exchangeRates = {
+            USD: 1,
+            USDT: 1.00, // Assuming 1 USDT = 1 USD for simplicity
+            ETH: 0.0003, // Example: 1 USD = 0.0003 ETH
+            XRP: 2.0,    // Example: 1 USD = 2.0 XRP
+            BTC: 0.000015 // Example: 1 USD = 0.000015 BTC
+        };
+
+        // --- Persistence (using localStorage) ---
+        function loadState() {
+            const savedBalance = localStorage.getItem('adRewardsBalance');
+            const savedAdsWatched = localStorage.getItem('adRewardsAdsWatched');
+            const savedCooldownEndTime = localStorage.getItem('adRewardsCooldownEndTime');
+            const savedSpinCooldownEndTime = localStorage.getItem('adRewardsSpinCooldownEndTime');
+            const savedTasksCompleted = localStorage.getItem('adRewardsTasksCompleted');
+            const savedTaskCooldownEndTime = localStorage.getItem('adRewardsTaskCooldownEndTime');
+
+
+            if (savedBalance) {
+                balance = parseFloat(savedBalance);
+            }
+            if (savedAdsWatched) {
+                adsWatched = parseInt(savedAdsWatched);
+            }
+            if (savedCooldownEndTime) {
+                cooldownEndTime = parseInt(savedCooldownEndTime);
+            }
+            if (savedSpinCooldownEndTime) {
+                spinCooldownEndTime = parseInt(savedSpinCooldownEndTime);
+            }
+            if (savedTasksCompleted) {
+                tasksCompleted = parseInt(savedTasksCompleted);
+            }
+            if (savedTaskCooldownEndTime) {
+                taskCooldownEndTime = parseInt(savedTaskCooldownEndTime);
+            }
+        }
+
+        function saveState() {
+            localStorage.setItem('adRewardsBalance', balance.toFixed(2));
+            localStorage.setItem('adRewardsAdsWatched', adsWatched.toString());
+            localStorage.setItem('adRewardsCooldownEndTime', cooldownEndTime.toString());
+            localStorage.setItem('adRewardsSpinCooldownEndTime', spinCooldownEndTime.toString());
+            localStorage.setItem('adRewardsTasksCompleted', tasksCompleted.toString());
+            localStorage.setItem('adRewardsTaskCooldownEndTime', taskCooldownEndTime.toString());
+        }
+
+        // --- Cooldown Timer Logic ---
+        function calculateTimeLeft(endTime) {
+            const now = Date.now();
+            const difference = endTime - now;
+            if (difference <= 0) {
+                return { hours: 0, minutes: 0, seconds: 0, isActive: false };
+            }
+
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / 1000 / 60) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+
+            return { hours, minutes, seconds, isActive: true };
+        }
+
+        function updateCooldownDisplay() {
+            const adTimeLeft = calculateTimeLeft(cooldownEndTime);
+            const hoursElem = document.getElementById('cooldown-hours');
+            const minutesElem = document.getElementById('cooldown-minutes');
+            const secondsElem = document.getElementById('cooldown-seconds');
+
+            if (hoursElem) hoursElem.textContent = adTimeLeft.hours;
+            if (minutesElem) minutesElem.textContent = adTimeLeft.minutes;
+            if (secondsElem) secondsElem.textContent = adTimeLeft.seconds;
+
+            // Update dashboard ad cooldown display
+            const dashboardHoursElem = document.getElementById('cooldown-dashboard-hours');
+            const dashboardMinutesElem = document.getElementById('cooldown-dashboard-minutes');
+            const dashboardSecondsElem = document.getElementById('cooldown-dashboard-seconds');
+            if (dashboardHoursElem) dashboardHoursElem.textContent = adTimeLeft.hours;
+            if (dashboardMinutesElem) dashboardMinutesElem.textContent = adTimeLeft.minutes;
+            if (dashboardSecondsElem) dashboardSecondsElem.textContent = adTimeLeft.seconds;
+
+            if (!adTimeLeft.isActive && cooldownEndTime > 0) {
+                adsWatched = 0;
+                cooldownEndTime = 0;
+                saveState();
+                renderPage(currentPage); // Re-render to update dashboard status
+            }
+
+            // Update spin cooldown display
+            const spinTimeLeft = calculateTimeLeft(spinCooldownEndTime);
+            const spinHoursElem = document.getElementById('spin-cooldown-hours');
+            const spinMinutesElem = document.getElementById('spin-cooldown-minutes');
+            const spinSecondsElem = document.getElementById('spin-cooldown-seconds');
+
+            if (spinHoursElem) spinHoursElem.textContent = spinTimeLeft.hours;
+            if (spinMinutesElem) spinMinutesElem.textContent = spinTimeLeft.minutes;
+            if (spinSecondsElem) spinSecondsElem.textContent = spinTimeLeft.seconds;
+
+            const spinCooldownMessage = document.getElementById('spin-cooldown-message');
+            const spinButton = document.getElementById('spin-button');
+
+            if (spinCooldownMessage && spinButton) {
+                if (spinTimeLeft.isActive) {
+                    spinCooldownMessage.classList.remove('hidden');
+                    spinButton.disabled = true;
+                } else {
+                    spinCooldownMessage.classList.add('hidden');
+                    spinButton.disabled = false;
+                    if (spinCooldownEndTime > 0) { // Only reset if it was active and just ended
+                        spinCooldownEndTime = 0;
+                        saveState();
+                        renderPage(currentPage); // Re-render to update spin page status
+                    }
+                }
+            }
+
+            // Update task cooldown display
+            const taskTimeLeft = calculateTimeLeft(taskCooldownEndTime);
+            const taskCooldownPopupHours = document.getElementById('task-cooldown-popup-hours');
+            const taskCooldownPopupMinutes = document.getElementById('task-cooldown-popup-minutes');
+            const taskCooldownPopupSeconds = document.getElementById('task-cooldown-popup-seconds');
+            
+            if (taskCooldownPopupHours) taskCooldownPopupHours.textContent = taskTimeLeft.hours;
+            if (taskCooldownPopupMinutes) taskCooldownPopupMinutes.textContent = taskTimeLeft.minutes;
+            if (taskCooldownPopupSeconds) taskCooldownPopupSeconds.textContent = taskTimeLeft.seconds;
+
+            const tasksCooldownMessage = document.getElementById('tasks-cooldown-message');
+            if (tasksCooldownMessage) {
+                if (taskTimeLeft.isActive) {
+                    tasksCooldownMessage.classList.remove('hidden');
+                } else {
+                    tasksCooldownMessage.classList.add('hidden');
+                    if (taskCooldownEndTime > 0) { // Only reset if it was active and just ended
+                        tasksCompleted = 0;
+                        taskCooldownEndTime = 0;
+                        saveState();
+                        renderPage(currentPage); // Re-render to update tasks page status
+                    }
+                }
+            }
+        }
+
+        // --- Live Activity Notifications (Right Side) Logic ---
+        const userNames = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi", "Ivan", "Judy"];
+        const notificationQueueRight = [];
+        let notificationTimerRight = null;
+
+        function generateRightNotification() {
+            const type = Math.random() < 0.7 ? 'earned' : 'withdrew'; // 70% earned, 30% withdrew
+            const name = userNames[Math.floor(Math.random() * userNames.length)];
+            let amount;
+            let message;
+
+            if (type === 'earned') {
+                amount = (Math.random() * (300 - 50) + 50).toFixed(2); // $50 to $300
+                message = `${name} earned $${amount}!`;
+            } else {
+                amount = (Math.random() * (3000 - 500) + 500).toFixed(2); // $500 to $3000
+                message = `${name} withdrew $${amount}!`;
+            }
+            return { id: Date.now(), message };
+        }
+
+        function showRightNotification() {
+            const notifElem = document.getElementById('live-notification-right');
+            const messageElem = document.getElementById('live-notification-right-message');
+
+            if (notificationQueueRight.length > 0) {
+                const nextNotification = notificationQueueRight.shift();
+                messageElem.textContent = nextNotification.message;
+                notifElem.classList.remove('hidden');
+                notifElem.classList.add('animate-fade-in-out-right');
+
+                notificationTimerRight = setTimeout(() => {
+                    notifElem.classList.add('hidden');
+                    notifElem.classList.remove('animate-fade-in-out-right');
+                    // Small delay before showing next to avoid flicker
+                    setTimeout(() => showRightNotification(), 500);
+                }, 5000); // Show notification for 5 seconds
+            }
+        }
+
+        // --- Live Withdrawal Notifications (Left Side) Logic ---
+        const notificationQueueLeft = [];
+        let notificationTimerLeft = null;
+
+        function generateLeftNotification() {
+            const name = userNames[Math.floor(Math.random() * userNames.length)];
+            const amount = (Math.random() * (3500 - 1000) + 1000).toFixed(2); // $1000 to $3500
+            const message = `${name} submitted a withdrawal of $${amount}!`;
+            return { id: Date.now(), message };
+        }
+
+        function showLeftNotification() {
+            const notifElem = document.getElementById('live-notification-left');
+            const messageElem = document.getElementById('live-notification-left-message');
+
+            if (notificationQueueLeft.length > 0) {
+                const nextNotification = notificationQueueLeft.shift();
+                messageElem.textContent = nextNotification.message;
+                notifElem.classList.remove('hidden');
+                notifElem.classList.add('animate-fade-in-out-left');
+
+                notificationTimerLeft = setTimeout(() => {
+                    notifElem.classList.add('hidden');
+                    notifElem.classList.remove('animate-fade-in-out-left');
+                    // Small delay before showing next to avoid flicker
+                    setTimeout(() => showLeftNotification(), 500);
+                }, 6000); // Show notification for 6 seconds
+            }
+        }
+
+        // --- Handlers for various actions ---
+
+        // Handle watching an ad
+        function handleWatchAd(adIndex) {
+            if (adsWatched >= 30) {
+                alert("You have watched all ads for this session! Please wait for the cooldown.");
+                return;
+            }
+            if (cooldownEndTime > Date.now()) {
+                const timeLeft = calculateTimeLeft(cooldownEndTime);
+                alert(`Cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                return;
+            }
+
+            const watchDuration = 10000; // 10 seconds
+            const earnAmount = (Math.random() * (0.10 - 0.05) + 0.05); // Random between $0.05 and $0.10
+
+            window.open(adLinks[adIndex], '_blank');
+            alert(`Watching ad ${adIndex + 1}... Please wait 10 seconds.`);
+
+            setTimeout(() => {
+                balance = parseFloat((balance + earnAmount).toFixed(2));
+                adsWatched++;
+                saveState();
+                renderPage(currentPage); // Re-render to update dashboard
+
+                if (adsWatched >= 30) {
+                    const fiveHoursLater = Date.now() + (5 * 60 * 60 * 1000); // 5 hours in milliseconds
+                    cooldownEndTime = fiveHoursLater;
+                    saveState();
+                    document.getElementById('ad-completion-popup').classList.remove('hidden');
+                    updateCooldownDisplay(); // Update cooldown in popup
+                }
+            }, watchDuration);
+        }
+
+        // Handle spinning the wheel
+        function handleSpin() {
+            if (spinCooldownEndTime > Date.now()) {
+                const timeLeft = calculateTimeLeft(spinCooldownEndTime);
+                alert(`Spin cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                return;
+            }
+
+            const earnAmount = (Math.random() * (50 - 1) + 1); // Random between $1 and $50
+            balance = parseFloat((balance + earnAmount).toFixed(2));
+            
+            const fiveHoursLater = Date.now() + (5 * 60 * 60 * 1000); // 5 hours in milliseconds
+            spinCooldownEndTime = fiveHoursLater;
+            
+            saveState();
+            renderPage(currentPage); // Re-render dashboard for balance update and spin page for cooldown
+            alert(`Congratulations! You won $${earnAmount.toFixed(2)} from the spin wheel!`);
+        }
+
+        // Handle completing a task
+        function handleCompleteTask(taskId) {
+            if (tasksCompleted >= tasks.length) {
+                alert("You have completed all tasks for this session! Please wait for the cooldown.");
+                return;
+            }
+            if (taskCooldownEndTime > Date.now()) {
+                const timeLeft = calculateTimeLeft(taskCooldownEndTime);
+                alert(`Task cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                return;
+            }
+
+            const earnAmount = 5.00; // Each task earns $5
+            balance = parseFloat((balance + earnAmount).toFixed(2));
+            tasksCompleted++;
+            saveState();
+            renderPage(currentPage); // Re-render tasks page to update status
+
+            alert(`Task completed! You earned $${earnAmount.toFixed(2)}.`);
+
+            if (tasksCompleted >= tasks.length) {
+                const fiveHoursLater = Date.now() + (5 * 60 * 60 * 1000); // 5 hours in milliseconds
+                taskCooldownEndTime = fiveHoursLater;
+                saveState();
+                document.getElementById('task-completion-popup').classList.remove('hidden');
+                updateCooldownDisplay(); // Update cooldown in popup
+            }
+        }
+
+
+        // Handle withdrawal submission
+        function handleWithdrawalSubmit(event) {
+            event.preventDefault();
+            const form = event.target;
+            const amount = parseFloat(form.elements['withdrawal-amount'].value);
+            const method = form.elements['withdrawal-method-hidden'].value; // Use hidden input for method
+            const details = form.elements['withdrawal-details'].value;
+            const minWithdrawal = 500; // Minimum withdrawal amount
+
+            if (isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid positive amount.");
+                return;
+            }
+            if (amount < minWithdrawal) {
+                alert(`Minimum withdrawal amount is $${minWithdrawal}.`);
+                return;
+            }
+            if (amount > balance) {
+                alert("Withdrawal amount exceeds your current balance.");
+                return;
+            }
+
+            balance = parseFloat((balance - amount).toFixed(2));
+            withdrawalDetails = { amount, method, details };
+            saveState();
+            renderPage(currentPage); // Re-render dashboard for balance update
+
+            document.getElementById('withdrawal-amount-display').textContent = amount.toFixed(2);
+            document.getElementById('withdrawal-method-display').textContent = method;
+            document.getElementById('withdrawal-confirmation-popup').classList.remove('hidden');
+
+            // Simulate processing after a delay (e.g., 3 seconds)
+            setTimeout(() => {
+                console.log(`Withdrawal of $${amount} via ${method} with details: ${details} processed.`);
+            }, 3000);
+        }
+
+        // Function to format balance based on selected currency
+        function getFormattedBalance() {
+            const rate = exchangeRates[selectedCurrency];
+            if (selectedCurrency === 'USD') {
+                return `$${balance.toFixed(2)}`;
+            } else {
+                return `${(balance * rate).toFixed(4)} ${selectedCurrency}`;
+            }
+        }
+
+        // --- UI Rendering Functions ---
+        function updateBalanceDisplay() {
+            const balanceElement = document.getElementById('current-balance-display');
+            if (balanceElement) {
+                balanceElement.textContent = getFormattedBalance();
+            }
+            const adsWatchedElement = document.getElementById('ads-watched-display');
+            if (adsWatchedElement) {
+                adsWatchedElement.textContent = `${adsWatched} / 30`;
+            }
+            const progressBar = document.getElementById('ads-progress-bar');
+            if (progressBar) {
+                progressBar.style.width = `${(adsWatched / 30) * 100}%`;
+            }
+            const withdrawalCurrentBalance = document.getElementById('withdrawal-current-balance');
+            if (withdrawalCurrentBalance) {
+                withdrawalCurrentBalance.textContent = getFormattedBalance();
+            }
+            const tasksCompletedDisplay = document.getElementById('tasks-completed-display');
+            if (tasksCompletedDisplay) {
+                tasksCompletedDisplay.textContent = `${tasksCompleted} / ${tasks.length}`;
+            }
+            const tasksProgressBar = document.getElementById('tasks-progress-bar');
+            if (tasksProgressBar) {
+                tasksProgressBar.style.width = `${(tasksCompleted / tasks.length) * 100}%`;
+            }
+        }
+
+        function renderDashboardPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-xl shadow-2xl border border-gray-700 text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Your Dashboard</h2>
+
+                    <!-- Balance Display -->
+                    <div class="bg-gradient-to-r from-blue-700 to-purple-800 text-white p-6 rounded-xl shadow-lg mb-8 flex flex-col items-center border border-blue-600">
+                        <p class="text-lg font-semibold mb-2 font-heading">Current Balance:</p>
+                        <p id="current-balance-display" class="text-5xl font-bold mb-4 font-heading">${getFormattedBalance()}</p>
+                        <div class="flex items-center space-x-2">
+                            <label for="currency-select" class="text-sm font-heading">Display in:</label>
+                            <select id="currency-select" class="bg-white bg-opacity-20 text-white rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-white font-heading">
+                                ${Object.keys(exchangeRates).map(currency => `<option value="${currency}" class="text-gray-900" ${selectedCurrency === currency ? 'selected' : ''}>${currency}</option>`).join('')}
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Ad Session Progress -->
+                    <div class="bg-gray-900 p-6 rounded-xl shadow-md mb-8 border border-gray-700">
+                        <h3 class="text-2xl font-semibold text-gray-200 mb-4 font-heading">Ad Watching Progress</h3>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-lg text-gray-300 font-heading">Ads Watched This Session:</p>
+                            <p id="ads-watched-display" class="text-2xl font-bold text-blue-400 font-heading">${adsWatched} / 30</p>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-3">
+                            <div id="ads-progress-bar" class="bg-green-500 h-3 rounded-full transition-all duration-500 ease-out" style="width: ${(adsWatched / 30) * 100}%"></div>
+                        </div>
+                        ${adsWatched >= 30 && cooldownEndTime > Date.now() ? `
+                            <p class="text-red-400 mt-4 text-center font-medium font-heading">
+                                Next ads available in: <span id="cooldown-dashboard-hours">0</span>h <span id="cooldown-dashboard-minutes">0</span>m <span id="cooldown-dashboard-seconds">0</span>s
+                            </p>
+                        ` : `
+                            <p class="text-green-400 mt-4 text-center font-medium font-heading">
+                                ${adsWatched < 30 ? 'Watch more ads to reach your daily limit!' : 'Cooldown ended! You can watch ads again.'}
+                            </p>
+                        `}
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button id="dashboard-watch-ads" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-green-500 font-heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                            <span>Watch Ads</span>
+                        </button>
+                        <button id="dashboard-spin-roll" class="bg-gradient-to-r from-yellow-500 to-orange-600 hover:from-orange-600 hover:to-yellow-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-yellow-400 font-heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M11.05 14.553l-1.588 1.588c-.566.566-.995 1.258-1.282 2.028M15.5 10.5l1.588-1.588c.566-.566.995-1.258 1.282-2.028M12 21a9 9 0 110-18 9 9 0 010 18z" />
+                            </svg>
+                            <span>Spin & Win</span>
+                        </button>
+                        <button id="dashboard-tasks" class="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-purple-500 font-heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                            <span>Complete Tasks</span>
+                        </button>
+                        <button id="dashboard-withdrawal" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-red-500 font-heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                            </svg>
+                            <span>Withdraw Funds</span>
+                        </button>
+                        <button id="dashboard-privacy" class="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-4 px-6 rounded-xl shadow-lg transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-gray-500 font-heading">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Ad Privacy Policy</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('currency-select').addEventListener('change', (e) => {
+                selectedCurrency = e.target.value;
+                updateBalanceDisplay();
+            });
+            document.getElementById('dashboard-watch-ads').addEventListener('click', () => renderPage('watch-ads'));
+            document.getElementById('dashboard-spin-roll').addEventListener('click', () => renderPage('spin-roll'));
+            document.getElementById('dashboard-tasks').addEventListener('click', () => renderPage('tasks')); // New: Tasks button
+            document.getElementById('dashboard-withdrawal').addEventListener('click', () => renderPage('withdrawal'));
+            document.getElementById('dashboard-privacy').addEventListener('click', () => renderPage('privacy'));
+            updateBalanceDisplay(); // Initial update for dashboard
+            updateCooldownDisplay(); // Update cooldown on dashboard
+        }
+
+        function renderWatchAdsPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Watch Ads & Earn</h2>
+                    <p class="text-gray-300 mb-6 text-center">Click on an ad to watch it for 10 seconds and earn! (<span id="ads-watched-page-display">${adsWatched}</span>/30)</p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        ${adLinks.map((link, index) => `
+                            <div
+                                class="bg-gray-900 rounded-xl shadow-md overflow-hidden transform hover:scale-105 transition duration-300 cursor-pointer border border-gray-700 ad-card"
+                                data-ad-index="${index}"
+                            >
+                                <img
+                                    src="https://placehold.co/400x225/2C3E50/ECF0F1?text=Ad+Post+${index + 1}"
+                                    alt="Ad Post ${index + 1}"
+                                    class="w-full h-40 object-cover"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/400x225/2C3E50/ECF0F1?text=Ad+Image+Error';"
+                                />
+                                <div class="p-4">
+                                    <h3 class="font-semibold text-lg text-gray-100 mb-2 font-heading">Ad Title ${index + 1}</h3>
+                                    <p class="text-gray-300 text-sm">Watch this ad for 10 seconds to earn <span class="font-bold text-green-400">$0.05 - $0.10</span>.</p>
+                                    <button
+                                        class="mt-4 w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md border border-blue-500 watch-ad-button font-heading"
+                                        ${adsWatched >= 30 || cooldownEndTime > Date.now() ? 'disabled' : ''}
+                                    >
+                                        ${adsWatched >= 30 || cooldownEndTime > Date.now() ? 'Cooldown Active' : 'Watch Ad'}
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button id="watch-ads-back-button" class="mt-8 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transform hover:scale-105 transition duration-300 block mx-auto border border-gray-500 font-heading">
+                        Back to Dashboard
+                    </button>
+                </div>
+            `;
+            document.querySelectorAll('.ad-card').forEach(card => {
+                card.addEventListener('click', (e) => {
+                    const adIndex = parseInt(e.currentTarget.dataset.adIndex);
+                    handleWatchAd(adIndex);
+                });
+            });
+            document.getElementById('watch-ads-back-button').addEventListener('click', () => renderPage('dashboard'));
+            document.getElementById('ads-watched-page-display').textContent = adsWatched;
+        }
+
+        function renderSpinRollPage() {
+            const mainContent = document.getElementById('main-content');
+            const spinTimeLeft = calculateTimeLeft(spinCooldownEndTime);
+
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 flex flex-col items-center text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Spin & Win!</h2>
+                    <p class="text-gray-300 mb-8 text-center">Click the button to spin the wheel and earn between $1 and $50! You can spin once every 5 hours.</p>
+
+                    <!-- Simple Spin Wheel SVG -->
+                    <div class="relative w-64 h-64 mb-8">
+                        <svg class="w-full h-full" viewBox="0 0 100 100">
+                            <!-- Wheel segments -->
+                            <circle cx="50" cy="50" r="45" fill="#333" stroke="#555" stroke-width="2" />
+                            <path d="M50 50 L50 5 A45 45 0 0 1 88.9 21.0 L50 50 Z" fill="#FF6347" /> <!-- Red-Orange -->
+                            <path d="M50 50 L88.9 21.0 A45 45 0 0 1 95 50 L50 50 Z" fill="#4CAF50" /> <!-- Green -->
+                            <path d="M50 50 L95 50 A45 45 0 0 1 88.9 78.9 L50 50 Z" fill="#2196F3" /> <!-- Blue -->
+                            <path d="M50 50 L88.9 78.9 A45 45 0 0 1 50 95 L50 50 Z" fill="#9C27B0" /> <!-- Purple -->
+                            <path d="M50 50 L50 95 A45 45 0 0 1 11.0 78.9 L50 50 Z" fill="#FF9800" /> <!-- Orange -->
+                            <path d="M50 50 L11.0 78.9 A45 45 0 0 1 5 50 L50 50 Z" fill="#673AB7" /> <!-- Deep Purple -->
+                            <path d="M50 50 L5 50 A45 45 0 0 1 11.0 21.0 L50 50 Z" fill="#00BCD4" /> <!-- Cyan -->
+                            <path d="M50 50 L11.0 21.0 A45 45 0 0 1 50 5 L50 50 Z" fill="#FFEB3B" /> <!-- Yellow -->
+                            <!-- Center circle -->
+                            <circle cx="50" cy="50" r="15" fill="#FFF" stroke="#607D8B" stroke-width="1" />
+                            <text x="50" y="55" text-anchor="middle" font-size="12" fill="#333" font-weight="bold">SPIN</text>
+                        </svg>
+                        <!-- Pointer -->
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-full w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[20px] border-b-red-600"></div>
+                    </div>
+
+                    <button id="spin-button" class="bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-indigo-700 hover:to-purple-800 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300 text-xl border border-purple-500 font-heading" ${spinTimeLeft.isActive ? 'disabled' : ''}>
+                        Spin the Wheel!
+                    </button>
+                    <p id="spin-cooldown-message" class="text-red-400 mt-4 text-center font-medium font-heading ${spinTimeLeft.isActive ? '' : 'hidden'}">
+                        Next spin available in: <span id="spin-cooldown-hours">0</span>h <span id="spin-cooldown-minutes">0</span>m <span id="spin-cooldown-seconds">0</span>s
+                    </p>
+                    <button id="spin-back-button" class="mt-8 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transform hover:scale-105 transition duration-300 border border-gray-500 font-heading">
+                        Back to Dashboard
+                    </button>
+                </div>
+            `;
+            document.getElementById('spin-button').addEventListener('click', handleSpin);
+            document.getElementById('spin-back-button').addEventListener('click', () => renderPage('dashboard'));
+            updateCooldownDisplay(); // Update spin cooldown on page load
+        }
+
+        function renderTasksPage() {
+            const mainContent = document.getElementById('main-content');
+            const taskTimeLeft = calculateTimeLeft(taskCooldownEndTime);
+
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Complete Tasks & Earn</h2>
+                    <p class="text-gray-300 mb-6 text-center">Complete these tasks to earn $5 each! (<span id="tasks-completed-display">${tasksCompleted}</span>/${tasks.length})</p>
+                    <div class="w-full bg-gray-700 rounded-full h-3 mb-6">
+                        <div id="tasks-progress-bar" class="bg-yellow-500 h-3 rounded-full transition-all duration-500 ease-out" style="width: ${(tasksCompleted / tasks.length) * 100}%"></div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        ${tasks.map((task, index) => `
+                            <div class="bg-gray-900 rounded-xl shadow-md p-4 border border-gray-700">
+                                <h3 class="font-semibold text-lg text-gray-100 mb-2 font-heading">${task.title}</h3>
+                                <p class="text-gray-300 text-sm mb-4">${task.description}</p>
+                                <p class="text-green-400 font-bold mb-4">Earn $5.00</p>
+                                <button
+                                    class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-2 px-4 rounded-lg shadow-md task-button font-heading"
+                                    data-task-id="${task.id}"
+                                    ${tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() || (tasksCompleted > index && taskCooldownEndTime === 0) ? 'disabled' : ''}
+                                >
+                                    ${tasksCompleted > index && taskCooldownEndTime === 0 ? 'Completed' : (tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() ? 'Cooldown Active' : 'Complete Task')}
+                                </button>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <p id="tasks-cooldown-message" class="text-red-400 mt-4 text-center font-medium font-heading ${taskTimeLeft.isActive ? '' : 'hidden'}">
+                        New tasks available in: <span id="task-cooldown-hours">0</span>h <span id="task-cooldown-minutes">0</span>m <span id="task-cooldown-seconds">0</span>s
+                    </p>
+
+                    <button id="tasks-back-button" class="mt-8 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transform hover:scale-105 transition duration-300 block mx-auto border border-gray-500 font-heading">
+                        Back to Dashboard
+                    </button>
+                </div>
+            `;
+            document.querySelectorAll('.task-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const taskId = parseInt(e.currentTarget.dataset.taskId);
+                    handleCompleteTask(taskId);
+                });
+            });
+            document.getElementById('tasks-back-button').addEventListener('click', () => renderPage('dashboard'));
+            updateBalanceDisplay(); // Update task progress display
+            updateCooldownDisplay(); // Update task cooldown on page load
+        }
+
+        function renderWithdrawalPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Withdraw Your Earnings</h2>
+                    <p class="text-gray-300 mb-6 text-center">Current Balance: <span class="font-bold text-blue-400" id="withdrawal-current-balance">${getFormattedBalance()}</span></p>
+                    <p class="text-gray-300 mb-6 text-center text-sm">Minimum withdrawal amount: <span class="font-bold text-green-400">$500.00</span></p>
+
+
+                    <form id="withdrawal-form" class="bg-gray-900 p-6 rounded-xl shadow-md border border-gray-700 text-gray-100">
+                        <div class="mb-6">
+                            <label for="withdrawal-amount" class="block text-gray-200 text-sm font-bold mb-2 font-heading">
+                                Amount to Withdraw ($):
+                            </label>
+                            <input
+                                type="number"
+                                id="withdrawal-amount"
+                                class="shadow appearance-none border border-gray-600 bg-gray-800 rounded-lg w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="e.g., 500.00"
+                                min="0.01"
+                                step="0.01"
+                                required
+                            />
+                        </div>
+
+                        <div class="mb-6">
+                            <label class="block text-gray-200 text-sm font-bold mb-2 font-heading">
+                                Withdrawal Method:
+                            </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <button type="button" class="p-4 rounded-xl shadow-lg flex flex-col items-center justify-center transition duration-300 border withdrawal-method-button" data-method="paypal">
+                                    <img src="https://placehold.co/60x60/003087/FFFFFF?text=PayPal" alt="PayPal Icon" class="w-12 h-12 mb-2 rounded-full" />
+                                    <span class="font-semibold font-heading">PayPal</span>
+                                </button>
+                                <button type="button" class="p-4 rounded-xl shadow-lg flex flex-col items-center justify-center transition duration-300 border withdrawal-method-button" data-method="crypto">
+                                    <img src="https://placehold.co/60x60/F7931A/FFFFFF?text=Crypto" alt="Crypto Icon" class="w-12 h-12 mb-2 rounded-full" />
+                                    <span class="font-semibold font-heading">Crypto</span>
+                                </button>
+                                <button type="button" class="p-4 rounded-xl shadow-lg flex flex-col items-center justify-center transition duration-300 border withdrawal-method-button" data-method="bank">
+                                    <img src="https://placehold.co/60x60/28A745/FFFFFF?text=Bank" alt="Bank Icon" class="w-12 h-12 mb-2 rounded-full" />
+                                    <span class="font-semibold font-heading">Bank Transfer</span>
+                                </button>
+                            </div>
+                            <input type="hidden" id="withdrawal-method-hidden" value="paypal"> <!-- Hidden input to store selected method -->
+                        </div>
+
+                        <div class="mb-6">
+                            <label for="withdrawal-details" class="block text-gray-200 text-sm font-bold mb-2 font-heading">
+                                PayPal Email:
+                            </label>
+                            <textarea
+                                id="withdrawal-details"
+                                class="shadow appearance-none border border-gray-600 bg-gray-800 rounded-lg w-full py-3 px-4 text-gray-100 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 resize-none"
+                                placeholder="your-email@example.com"
+                                required
+                            ></textarea>
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 rounded-lg shadow-md transform hover:scale-105 transition duration-300 flex items-center justify-center space-x-2 border border-blue-500 font-heading"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                            </svg>
+                            <span>Submit Withdrawal Request</span>
+                        </button>
+                    </form>
+
+                    <button id="withdrawal-back-button" class="mt-8 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transform hover:scale-105 transition duration-300 block mx-auto border border-gray-500 font-heading">
+                        Back to Dashboard
+                    </button>
+                </div>
+            `;
+
+            // Event listeners for withdrawal form
+            const withdrawalForm = document.getElementById('withdrawal-form');
+            if (withdrawalForm) {
+                withdrawalForm.addEventListener('submit', handleWithdrawalSubmit);
+            }
+
+            const withdrawalMethodButtons = document.querySelectorAll('.withdrawal-method-button');
+            const withdrawalMethodHidden = document.getElementById('withdrawal-method-hidden');
+            const withdrawalDetailsLabel = withdrawalForm.querySelector('label[for="withdrawal-details"]');
+            const withdrawalDetailsTextarea = document.getElementById('withdrawal-details');
+
+            function updateMethodSelection(selectedMethod) {
+                withdrawalMethodButtons.forEach(button => {
+                    const method = button.dataset.method;
+                    // Reset classes for all buttons
+                    button.classList.remove(
+                        'bg-blue-700', 'border-blue-500', 'text-white', 'scale-105',
+                        'bg-yellow-700', 'border-yellow-500',
+                        'bg-green-700', 'border-green-500'
+                    );
+                    button.classList.add('bg-gray-800', 'border-gray-700', 'text-gray-300', 'hover:bg-blue-900', 'hover:border-blue-700');
+
+
+                    if (method === selectedMethod) {
+                        // Apply specific classes for the selected button
+                        if (method === 'paypal') {
+                            button.classList.add('bg-blue-700', 'border-blue-500', 'text-white', 'scale-105');
+                            button.classList.remove('hover:bg-blue-900', 'hover:border-blue-700'); // Remove hover for selected
+                        } else if (method === 'crypto') {
+                            button.classList.add('bg-yellow-700', 'border-yellow-500', 'text-white', 'scale-105');
+                            button.classList.remove('hover:bg-blue-900', 'hover:border-blue-700');
+                        } else if (method === 'bank') {
+                            button.classList.add('bg-green-700', 'border-green-500', 'text-white', 'scale-105');
+                            button.classList.remove('hover:bg-blue-900', 'hover:border-blue-700');
+                        }
+                    }
+                });
+                withdrawalMethodHidden.value = selectedMethod;
+
+                // Update label and placeholder for details textarea
+                if (selectedMethod === 'paypal') {
+                    withdrawalDetailsLabel.textContent = 'PayPal Email:';
+                    withdrawalDetailsTextarea.placeholder = 'your-email@example.com';
+                } else if (selectedMethod === 'crypto') {
+                    withdrawalDetailsLabel.textContent = 'Crypto Wallet Address (e.g., BTC, ETH, XRP, USDT):';
+                    withdrawalDetailsTextarea.placeholder = '0xAbc...123 (ETH), 1A1zP... (BTC), etc.';
+                } else if (selectedMethod === 'bank') {
+                    withdrawalDetailsLabel.textContent = 'Bank Account Details (Bank Name, Account No., Swift Code):';
+                    withdrawalDetailsTextarea.placeholder = 'Bank Name: ABC Bank\nAccount Number: 123456789\nSwift Code: ABCDEFGH';
+                }
+            }
+
+            withdrawalMethodButtons.forEach(button => {
+                button.addEventListener('click', () => updateMethodSelection(button.dataset.method));
+            });
+
+            // Set initial selection
+            updateMethodSelection(withdrawalMethodHidden.value);
+
+            document.getElementById('withdrawal-back-button').addEventListener('click', () => renderPage('dashboard'));
+            document.getElementById('withdrawal-current-balance').textContent = getFormattedBalance();
+        }
+
+        function renderPrivacyPage() {
+            const mainContent = document.getElementById('main-content');
+            mainContent.innerHTML = `
+                <div class="p-6 bg-gray-800 rounded-lg shadow-2xl border border-gray-700 text-gray-100">
+                    <h2 class="text-3xl font-extrabold text-blue-400 mb-6 text-center font-heading">Ad Privacy Policy</h2>
+                    <div class="prose max-w-none text-gray-300">
+                        <p>Welcome to our Ad Privacy Policy page. Your privacy is of utmost importance to us. This policy outlines how we handle information related to the advertisements displayed on our platform.</p>
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-200 font-heading">1. Ad Content and Third-Party Links</h3>
+                        <p>Our platform displays advertisements from third-party ad networks. The content of these ads is controlled by the respective ad networks. When you click on an ad, you will be redirected to the advertiser's website, which is outside of our control. We are not responsible for the privacy practices or the content of these third-party websites. We encourage you to review the privacy policies of any website you visit.</p>
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-200 font-heading">2. Data Collection</h3>
+                        <p>We do not directly collect personal identifying information from you when you watch ads on our platform. Your interaction with ads (e.g., clicking, viewing duration) is tracked solely for the purpose of crediting your account balance within our system. This tracking is internal and not shared with third parties in a personally identifiable way.</p>
+                        <p>For the purpose of maintaining your balance and ad-watching progress across sessions, we use your browser's local storage. This data is stored on your device and is not transmitted to our servers.</p>
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-200 font-heading">3. Cookies and Tracking Technologies</h3>
+                        <p>The third-party ad networks may use cookies and other tracking technologies (like web beacons) to collect information about your browsing activity across different websites to serve you personalized ads. This is standard practice for online advertising. We do not control these third-party cookies. You can typically manage your cookie preferences through your browser settings.</p>
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-200 font-heading">4. Your Choices</h3>
+                        <p>You have the option to watch ads or not. If you do not wish for third-party ad networks to collect information about your interests for advertising purposes, you should adjust your browser settings or use ad-blocking software. Please note that using ad-blocking software may affect your ability to earn rewards on our platform.</p>
+                        <h3 class="text-xl font-semibold mt-6 mb-3 text-gray-200 font-heading">5. Changes to This Policy</h3>
+                        <p>We may update our Ad Privacy Policy from time to time. We will notify you of any changes by posting the new policy on this page. You are advised to review this policy periodically for any changes.</p>
+                        <p class="mt-8 text-sm text-gray-400">Last updated: July 10, 2025</p>
+                    </div>
+                    <button id="privacy-back-button" class="mt-8 bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white font-bold py-3 px-6 rounded-xl shadow-md transform hover:scale-105 transition duration-300 block mx-auto border border-gray-500 font-heading">
+                        Back to Dashboard
+                    </button>
+                </div>
+            `;
+            document.getElementById('privacy-back-button').addEventListener('click', () => renderPage('dashboard'));
+        }
+
+        function renderPage(page) {
+            currentPage = page;
+            const navButtons = document.querySelectorAll('header nav button');
+            navButtons.forEach(button => {
+                if (button.id === `nav-${page}`) {
+                    button.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'border', 'border-blue-500');
+                    button.classList.remove('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+                } else {
+                    button.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'border', 'border-blue-500');
+                    button.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+                }
+            });
+
+            switch (page) {
+                case 'dashboard':
+                    renderDashboardPage();
+                    break;
+                case 'watch-ads':
+                    renderWatchAdsPage();
+                    break;
+                case 'spin-roll':
+                    renderSpinRollPage();
+                    break;
+                case 'tasks': // New: Tasks page
+                    renderTasksPage();
+                    break;
+                case 'withdrawal':
+                    renderWithdrawalPage();
+                    break;
+                case 'privacy':
+                    renderPrivacyPage();
+                    break;
+                default:
+                    renderDashboardPage();
+            }
+        }
+
+        // --- Initialize App ---
+        document.addEventListener('DOMContentLoaded', () => {
+            loadState(); // Load state from local storage
+            
+            // Setup navigation button listeners (these are static elements)
+            document.getElementById('nav-dashboard').addEventListener('click', () => renderPage('dashboard'));
+            document.getElementById('nav-watch-ads').addEventListener('click', () => renderPage('watch-ads'));
+            document.getElementById('nav-spin-roll').addEventListener('click', () => renderPage('spin-roll'));
+            document.getElementById('nav-tasks').addEventListener('click', () => renderPage('tasks')); // New: Tasks nav button
+            document.getElementById('nav-withdrawal').addEventListener('click', () => renderPage('withdrawal'));
+            document.getElementById('nav-privacy').addEventListener('click', () => renderPage('privacy'));
+
+            // Setup popup close buttons (these are static elements)
+            document.getElementById('close-ad-completion-popup').addEventListener('click', () => {
+                document.getElementById('ad-completion-popup').classList.add('hidden');
+            });
+            document.getElementById('close-task-completion-popup').addEventListener('click', () => { // New: Task completion popup close
+                document.getElementById('task-completion-popup').classList.add('hidden');
+            });
+            document.getElementById('close-withdrawal-popup').addEventListener('click', () => {
+                document.getElementById('withdrawal-confirmation-popup').classList.add('hidden');
+            });
+
+            // Start notification generators
+            setInterval(() => {
+                notificationQueueRight.push(generateRightNotification());
+                if (document.getElementById('live-notification-right').classList.contains('hidden')) {
+                    showRightNotification();
+                }
+            }, Math.random() * (15000 - 5000) + 5000); // Generate every 5-15 seconds
+
+            setInterval(() => {
+                notificationQueueLeft.push(generateLeftNotification());
+                if (document.getElementById('live-notification-left').classList.contains('hidden')) {
+                    showLeftNotification();
+                }
+            }, Math.random() * (20000 - 10000) + 10000); // Generate every 10-20 seconds
+
+            // Update cooldown display every second if cooldown is active
+            setInterval(() => {
+                // Only update if a cooldown is active to avoid unnecessary DOM manipulation
+                if (cooldownEndTime > Date.now() || spinCooldownEndTime > Date.now() || taskCooldownEndTime > Date.now()) {
+                    updateCooldownDisplay();
+                }
+            }, 1000);
+
+            // Render initial page content after all static listeners are set up
+            renderPage(currentPage);
+        });
+    </script>
 </body>
 </html>
