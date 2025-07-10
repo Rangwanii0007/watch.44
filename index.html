@@ -79,6 +79,68 @@
         .prose p {
             margin-bottom: 1rem;
         }
+
+        /* Custom Alert Popup Styles */
+        .alert-popup-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+        .alert-popup-content {
+            background-color: #1f2937; /* gray-800 */
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4); /* shadow-2xl */
+            text-align: center;
+            max-width: 28rem; /* max-w-md */
+            width: 90%;
+            border: 1px solid;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .alert-popup-content.info { border-color: #3b82f6; /* blue-500 */ }
+        .alert-popup-content.success { border-color: #22c55e; /* green-500 */ }
+        .alert-popup-content.warning { border-color: #f59e0b; /* amber-500 */ }
+        .alert-popup-content.error { border-color: #ef4444; /* red-500 */ }
+
+        .alert-popup-title {
+            font-size: 1.875rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem;
+            color: #d1d5db; /* gray-200 */
+        }
+        .alert-popup-message {
+            font-size: 1.125rem; /* text-lg */
+            color: #e5e7eb; /* gray-100 */
+            margin-bottom: 1.5rem;
+        }
+        .alert-popup-button {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+            font-weight: 700; /* font-bold */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: all 0.2s ease-in-out;
+            border: none;
+            cursor: pointer;
+        }
+        .alert-popup-button:hover {
+            background-color: #2563eb; /* blue-600 */
+            transform: scale(1.05);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -124,6 +186,15 @@
         <main id="main-content" class="w-full max-w-4xl px-4 z-10">
             <!-- Page content will be rendered here by JavaScript -->
         </main>
+
+        <!-- Custom Alert Popup (replaces browser alerts) -->
+        <div id="custom-alert-popup" class="alert-popup-container hidden">
+            <div id="custom-alert-content" class="alert-popup-content">
+                <h3 id="custom-alert-title" class="alert-popup-title"></h3>
+                <p id="custom-alert-message" class="alert-popup-message"></p>
+                <button id="custom-alert-close-button" class="alert-popup-button font-heading">OK</button>
+            </div>
+        </div>
 
         <!-- Ad Completion Popup -->
         <div id="ad-completion-popup" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 backdrop-blur-sm">
@@ -193,7 +264,7 @@
         let selectedCurrency = 'USD';
         let withdrawalDetails = null;
 
-        // Ad links
+        // Ad links (used for both Watch Ads and Tasks)
         const adLinks = [
             "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
             "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
@@ -202,7 +273,6 @@
             "https://www.profitableratecpm.com/picq35z4?key=dfe34626298b8704347c7852027646c8",
             "https://www.profitableratecpm.com/uudm9x92?key=4ac673dbc7b0c0fcabab7eec886b0d48",
             "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
-            // Repeat ads to reach 30 for demonstration purposes
             "https://www.profitableratecpm.com/v30v9iyyx?key=d7ca0b45aee9f9b8402f8dce202ab1ff",
             "https://www.profitableratecpm.com/i3gkm6gh?key=d85966e00870fe9d565af06a993c1d9e",
             "https://www.profitableratecpm.com/xp8srwyr?key=980aeacfeee7fed071afcf7c6dd452fa",
@@ -226,18 +296,18 @@
             "https://www.profitableratecpm.com/k7cnm9n0?key=c4a438057537490d6366452641e47bd6",
         ];
 
-        // Task definitions
+        // Task definitions - now includes adLink
         const tasks = [
-            { id: 1, title: "Complete a quick survey", description: "Share your opinion on a short market research survey." },
-            { id: 2, title: "Watch a product demo", description: "View a brief demonstration of a new software product." },
-            { id: 3, title: "Install a mobile app", description: "Download and open a specified mobile application." },
-            { id: 4, title: "Sign up for a newsletter", description: "Subscribe to a partner's email newsletter." },
-            { id: 5, title: "Visit a partner website", description: "Browse a specific website for at least 30 seconds." },
-            { id: 6, title: "Follow us on social media", description: "Follow our official page on a popular social platform." },
-            { id: 7, title: "Write a short review", description: "Provide a brief review for a given product or service." },
-            { id: 8, title: "Play a mini-game", description: "Achieve a certain score in a simple browser game." },
-            { id: 9, title: "Refer a friend (simulated)", description: "Simulate referring a friend to our platform." },
-            { id: 10, title: "Complete a captcha challenge", description: "Prove you're not a robot by solving a captcha." }
+            { id: 1, title: "Complete a quick survey", description: "Share your opinion on a short market research survey.", adLink: adLinks[0] },
+            { id: 2, title: "Watch a product demo", description: "View a brief demonstration of a new software product.", adLink: adLinks[1] },
+            { id: 3, title: "Install a mobile app", description: "Download and open a specified mobile application.", adLink: adLinks[2] },
+            { id: 4, title: "Sign up for a newsletter", description: "Subscribe to a partner's email newsletter.", adLink: adLinks[3] },
+            { id: 5, title: "Visit a partner website", description: "Browse a specific website for at least 30 seconds.", adLink: adLinks[4] },
+            { id: 6, title: "Follow us on social media", description: "Follow our official page on a popular social platform.", adLink: adLinks[5] },
+            { id: 7, title: "Write a short review", description: "Provide a brief review for a given product or service.", adLink: adLinks[6] },
+            { id: 8, title: "Play a mini-game", description: "Achieve a certain score in a simple browser game.", adLink: adLinks[7] },
+            { id: 9, title: "Refer a friend (simulated)", description: "Simulate referring a friend to our platform.", adLink: adLinks[8] },
+            { id: 10, title: "Complete a captcha challenge", description: "Prove you're not a robot by solving a captcha.", adLink: adLinks[9] }
         ];
 
         // Hardcoded exchange rates for demonstration (In a real app, use a crypto API)
@@ -287,6 +357,29 @@
             localStorage.setItem('adRewardsTasksCompleted', tasksCompleted.toString());
             localStorage.setItem('adRewardsTaskCooldownEndTime', taskCooldownEndTime.toString());
         }
+
+        // --- Custom Alert Popup Function ---
+        function showAlert(title, message, type = 'info') {
+            const alertPopup = document.getElementById('custom-alert-popup');
+            const alertContent = document.getElementById('custom-alert-content');
+            const alertTitle = document.getElementById('custom-alert-title');
+            const alertMessage = document.getElementById('custom-alert-message');
+            const alertCloseButton = document.getElementById('custom-alert-close-button');
+
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+
+            // Reset and set type-specific border color
+            alertContent.classList.remove('info', 'success', 'warning', 'error');
+            alertContent.classList.add(type);
+
+            alertPopup.classList.remove('hidden');
+
+            alertCloseButton.onclick = () => {
+                alertPopup.classList.add('hidden');
+            };
+        }
+
 
         // --- Cooldown Timer Logic ---
         function calculateTimeLeft(endTime) {
@@ -457,12 +550,12 @@
         // Handle watching an ad
         function handleWatchAd(adIndex) {
             if (adsWatched >= 30) {
-                alert("You have watched all ads for this session! Please wait for the cooldown.");
+                showAlert("Limit Reached", "You have watched all ads for this session! Please wait for the cooldown.", "warning");
                 return;
             }
             if (cooldownEndTime > Date.now()) {
                 const timeLeft = calculateTimeLeft(cooldownEndTime);
-                alert(`Cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                showAlert("Cooldown Active", `Ad cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`, "warning");
                 return;
             }
 
@@ -470,7 +563,7 @@
             const earnAmount = (Math.random() * (0.10 - 0.05) + 0.05); // Random between $0.05 and $0.10
 
             window.open(adLinks[adIndex], '_blank');
-            alert(`Watching ad ${adIndex + 1}... Please wait 10 seconds.`);
+            showAlert("Watching Ad", `Watching ad ${adIndex + 1}... Please wait 10 seconds.`, "info");
 
             setTimeout(() => {
                 balance = parseFloat((balance + earnAmount).toFixed(2));
@@ -492,7 +585,7 @@
         function handleSpin() {
             if (spinCooldownEndTime > Date.now()) {
                 const timeLeft = calculateTimeLeft(spinCooldownEndTime);
-                alert(`Spin cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                showAlert("Cooldown Active", `Spin cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`, "warning");
                 return;
             }
 
@@ -504,36 +597,59 @@
             
             saveState();
             renderPage(currentPage); // Re-render dashboard for balance update and spin page for cooldown
-            alert(`Congratulations! You won $${earnAmount.toFixed(2)} from the spin wheel!`);
+            showAlert("Congratulations!", `You won $${earnAmount.toFixed(2)} from the spin wheel!`, "success");
         }
 
         // Handle completing a task
         function handleCompleteTask(taskId) {
             if (tasksCompleted >= tasks.length) {
-                alert("You have completed all tasks for this session! Please wait for the cooldown.");
+                showAlert("Limit Reached", "You have completed all tasks for this session! Please wait for the cooldown.", "warning");
                 return;
             }
             if (taskCooldownEndTime > Date.now()) {
                 const timeLeft = calculateTimeLeft(taskCooldownEndTime);
-                alert(`Task cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`);
+                showAlert("Cooldown Active", `Task cooldown active. Please wait ${timeLeft.hours}h ${timeLeft.minutes}m ${timeLeft.seconds}s.`, "warning");
+                return;
+            }
+
+            const task = tasks.find(t => t.id === taskId);
+            if (!task) {
+                showAlert("Error", "Task not found.", "error");
+                return;
+            }
+
+            // Check if this specific task has already been completed in this session
+            // (assuming tasksCompleted keeps track of the count, not individual task status)
+            // For individual task status, you'd need an array of completed task IDs.
+            // For now, we'll just disable the button visually after click.
+            const taskButton = document.querySelector(`.task-button[data-task-id="${taskId}"]`);
+            if (taskButton && taskButton.disabled) {
+                showAlert("Already Completed", "This task has already been completed in this session.", "info");
                 return;
             }
 
             const earnAmount = 5.00; // Each task earns $5
-            balance = parseFloat((balance + earnAmount).toFixed(2));
-            tasksCompleted++;
-            saveState();
-            renderPage(currentPage); // Re-render tasks page to update status
 
-            alert(`Task completed! You earned $${earnAmount.toFixed(2)}.`);
+            // Open ad link for the task
+            window.open(task.adLink, '_blank');
+            showAlert("Completing Task", `Redirecting to ad for "${task.title}"... Please wait 10 seconds.`, "info");
 
-            if (tasksCompleted >= tasks.length) {
-                const fiveHoursLater = Date.now() + (5 * 60 * 60 * 1000); // 5 hours in milliseconds
-                taskCooldownEndTime = fiveHoursLater;
+            setTimeout(() => {
+                balance = parseFloat((balance + earnAmount).toFixed(2));
+                tasksCompleted++;
                 saveState();
-                document.getElementById('task-completion-popup').classList.remove('hidden');
-                updateCooldownDisplay(); // Update cooldown in popup
-            }
+                renderPage(currentPage); // Re-render tasks page to update status
+
+                showAlert("Task Completed!", `Task "${task.title}" completed! You earned $${earnAmount.toFixed(2)}.`, "success");
+
+                if (tasksCompleted >= tasks.length) {
+                    const fiveHoursLater = Date.now() + (5 * 60 * 60 * 1000); // 5 hours in milliseconds
+                    taskCooldownEndTime = fiveHoursLater;
+                    saveState();
+                    document.getElementById('task-completion-popup').classList.remove('hidden');
+                    updateCooldownDisplay(); // Update cooldown in popup
+                }
+            }, 10000); // 10 seconds delay for task ad viewing
         }
 
 
@@ -547,15 +663,15 @@
             const minWithdrawal = 500; // Minimum withdrawal amount
 
             if (isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid positive amount.");
+                showAlert("Invalid Amount", "Please enter a valid positive amount.", "error");
                 return;
             }
             if (amount < minWithdrawal) {
-                alert(`Minimum withdrawal amount is $${minWithdrawal}.`);
+                showAlert("Minimum Withdrawal", `Minimum withdrawal amount is $${minWithdrawal}.`, "warning");
                 return;
             }
             if (amount > balance) {
-                alert("Withdrawal amount exceeds your current balance.");
+                showAlert("Insufficient Balance", "Withdrawal amount exceeds your current balance.", "error");
                 return;
             }
 
@@ -805,7 +921,10 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        ${tasks.map((task, index) => `
+                        ${tasks.map((task, index) => {
+                            const isTaskCompleted = (tasksCompleted > index && taskCooldownEndTime === 0);
+                            const isDisabled = tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() || isTaskCompleted;
+                            return `
                             <div class="bg-gray-900 rounded-xl shadow-md p-4 border border-gray-700">
                                 <h3 class="font-semibold text-lg text-gray-100 mb-2 font-heading">${task.title}</h3>
                                 <p class="text-gray-300 text-sm mb-4">${task.description}</p>
@@ -813,12 +932,13 @@
                                 <button
                                     class="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-2 px-4 rounded-lg shadow-md task-button font-heading"
                                     data-task-id="${task.id}"
-                                    ${tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() || (tasksCompleted > index && taskCooldownEndTime === 0) ? 'disabled' : ''}
+                                    ${isDisabled ? 'disabled' : ''}
                                 >
-                                    ${tasksCompleted > index && taskCooldownEndTime === 0 ? 'Completed' : (tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() ? 'Cooldown Active' : 'Complete Task')}
+                                    ${isTaskCompleted ? 'Completed' : (tasksCompleted >= tasks.length || taskCooldownEndTime > Date.now() ? 'Cooldown Active' : 'Complete Task')}
                                 </button>
                             </div>
-                        `).join('')}
+                        `;
+                        }).join('')}
                     </div>
 
                     <p id="tasks-cooldown-message" class="text-red-400 mt-4 text-center font-medium font-heading ${taskTimeLeft.isActive ? '' : 'hidden'}">
